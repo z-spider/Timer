@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="./source/bootstrap.min.css">
+		<script src="./source/jquery-3.3.1.slim.min.js"></script>
+		<script src="./source/popper.min.js"></script>
+		<script src="./source/bootstrap.min.js"></script>
+		<script type="text/javascript">
+		 var min,sec,timer;
+		 var origin_sec;
+		function get_text(t)
+		{
+			res=String(t);
+			if(t<=9)
+				return "0"+res;
+			return res;
+		}
+		function time_updata(){
+			if(min==0&&sec==0){
+				return;
+			}
+			sec-=1;
+			if(sec==-1){
+				min-=1;
+				sec=59;
+			}
+			var cur = $('#min-item-1');
+			cur.text(get_text(min));
+			cur = $('#s-item-1');
+			cur.text(get_text(sec));
+			timer=setTimeout("time_updata()", 1000);
+			$("#bar-1").attr('style', "width: "+String((origin_sec-(min*60+sec))*100/origin_sec)+"%");
+		}
+		function stop_timer(){
+			$("#btn-start").show();
+			$("#btn-stop").hide();
+			clearTimeout(timer);
+		}
+		function start_timer(){
+			$("#btn-start").hide();
+			$("#btn-stop").show();
+			timer = setTimeout("time_updata()", 1000);
+		}
+		function restart(){
+			stop_timer();
+			$("#btn-start").hide();
+			$("#btn-stop").show();
+			$("#welcome").hide();
+			min = Number($("#input-min").val());
+			sec = Number($("#input-s").val());
+			origin_sec = min*60+sec;
+			$('#reset').modal('hide');
+			$("#btn-2").show();
+			$("#btn-1").show();
+			$("#bar-1").attr('style', "width: 0%");
+			timer = setTimeout("time_updata()", 1000);
+		}
+	</script>
+	</head>
+	<style>
+		.pull-right{
+			float: right;
+		}
+		.my-middle{
+			vertical-align: middle;
+		}
+		.timer-block{
+			font-size: 4rem;
+            text-align:center;
+		}
+       .mid{
+         text-align:center;
+        }
+        .hid{
+          display: none;
+        }
+        .in-line{
+          display: inline-block;
+        }
+	</style>
+	<body>
+
+		<nav class="navbar navbar-dark bg-primary">
+			<span class="navbar-brand">辩论赛计时器 <i>Pro</i></span>
+			<a class="nav-item nav-link text-white" href="./timer.html" target="_self">普通模式[切换]</a>
+			<div class="navbar-nav">
+				<div class="nav-item nav-link">
+					<a class="text-white" href="https://github.com/MrAMS/"><b>GitHub/MrAMS</b></a><br>
+					<small class="text-white">By 杨骐嘉 2019</small>
+				</div>
+			</div>
+		  
+		</nav>
+		<div class="container mt-3">
+		<div class="m-3">
+			 <div class="timer-block">
+			   <span><span class="badge badge-primary" id="min-item-1">05</span> <small>min</small></span>
+			   <span><span class="badge badge-primary" id="s-item-1">02</span> <small>s</small></span>
+			   <div class="progress">
+					<div id="bar-1" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+				</div>
+			 </div>
+		</div>
+		<div class="m-3 mid">
+		  <h6 class="text-muted"><b id="cur-name"></b> <span id="welcome">请点击“重设”开始</span></h6>
+		  <button type="button" class="btn btn-sm btn-success" id="btn-stop" onclick="stop_timer()">暂停</button>
+		  <button type="button" class="btn btn-sm btn-success" id="btn-start" onclick="start_timer()" style="display: none;">开始</button>
+		  <button type="button" class="btn btn-sm btn-danger" id="btn-restart" data-toggle="modal" data-target="#reset">重设</button>
+		</div>
+		</div>
+		
+    <!-- Modal -->
+  <div class="modal fade" id="reset" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">重设Timer</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="in-line">
+            <div class="input-group mb-3">
+            <input type="number" class="form-control" id="input-min" placeholder="分钟" aria-label="Recipient's username" aria-describedby="basic-addon2" value="5">
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">min</span>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="number" class="form-control" id="input-s" placeholder="秒" aria-label="Recipient's username" aria-describedby="basic-addon2" value="0">
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">s</span>
+            </div>
+          </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="restart()">重设</button>
+        </div>
+      </div>
+    </div>
+  </div>
+		
+	</body>
+</html>
