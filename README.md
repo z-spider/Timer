@@ -1,4 +1,7 @@
 # Timer
+
+[在线预览](http://mrams.gitee.io/timer/)
+
 #### 倒计时应用，支持两方交替计时。（可用于辩论赛计时）
 
 #### 离线版本，下载后直接使用最新版本Chrome或FireFox打开即可
