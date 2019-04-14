@@ -8,4 +8,6 @@
 
 #### 使用jQuery + Bootstarp4开发
 
+本项目分支：[成都七中嘉祥外国语学校 海天杯计时器](https://github.com/MrAMS/Timer/tree/jx-haitianbei)
+
 ![](https://s2.ax1x.com/2019/03/30/ADAQMT.png)
