@@ -7,10 +7,20 @@
 		<script src="./source/jquery-3.3.1.slim.min.js"></script>
 		<script src="./source/popper.min.js"></script>
 		<script src="./source/bootstrap.min.js"></script>
+		<script src="./data.js"></script>
 		<script type="text/javascript">
 		 var cur=-1;
 		 var timers = new Array(4);
 		 var origin_sec = new Array(4);
+		 var audio = document.getElementById('sound');
+		  function bing(){
+		 	 var audio = document.getElementById('sound');
+		 	 audio.play();
+		 }
+		 function bing3(){
+		 	var audio = document.getElementById('sound3');
+		 	audio.play();
+		 }
 		function timer(id, name, min, sec, freq){
 			this.min=Number(min);
 			this.sec=Number(sec);
@@ -41,7 +51,11 @@
 		function time_updata(id){
 			var t=timers[Number(id)];
 			if(t.min==0&&t.sec==0){
+				bing3();
 				return;
+			}
+			if(t.min==0&&t.sec==30){
+				bing();
 			}
 			t.down();
 			var cur = $('#min-item-'+String(id));
@@ -107,6 +121,7 @@
 			}
 		}
 		function restart(){
+			bing();
 		  name1 = $("#input-name-1").val();
 		  name2 = $("#input-name-2").val();
 		  min = $("#input-min").val();
@@ -125,6 +140,30 @@
 			$("#welcome").text("选择班级开始计时");
 			$("#bar-1").attr('style', "width: 0%");
 			$("#bar-2").attr('style', "width: 0%");
+		}
+		function restart_with_time(min, s){
+			bing();
+		  name1 = $("#input-name-1").val();
+		  name2 = $("#input-name-2").val();
+		  min = Number(min);
+		  s = Number(s);
+			load_timer(1, name1, min, s);
+			load_timer(2, name2, min, s);
+			$('#reset').modal('hide');
+			$("#btn-2").show();
+			$("#btn-1").show();
+			$("#sta-item-2").hide();
+			$("#sta-item-1").hide();
+			$('#min-item-1').text(get_text(min));
+			$('#min-item-2').text(get_text(min));
+			$('#s-item-1').text(get_text(s));
+			$('#s-item-2').text(get_text(s));
+			$("#welcome").text("选择班级开始计时");
+			$("#bar-1").attr('style', "width: 0%");
+			$("#bar-2").attr('style', "width: 0%");
+		}
+		function load_name(){
+			$('#topic').val(name_topic);
 		}
 	</script>
 	</head>
@@ -149,7 +188,7 @@
       display: inline-block;
     }
 	</style>
-	<body>
+	<body onload="load_name()">
 
 		<nav class="navbar navbar-dark bg-primary">
 			<span class="navbar-brand">辩论赛计时器 <i>Pro</i></span>
@@ -170,7 +209,7 @@
 						<h3 style="font-weight: bold;">“海天杯”辩论赛</h3>
 				</span>
 			    <div>
-					<input type="text" name="firstname" value="辩题" style="border: none;color: gray;text-align: center;width: 100%;">
+					<input type="text" id="topic" name="firstname" value="辩题" style="border: none;color: gray;text-align: center;width: 100%;">
 				</div>
 			</div>
 			<div class="m-3">
@@ -198,15 +237,20 @@
        </div>
     </div>
     <div class="m-3 mid">
-      <h6 class="text-muted"><b id="cur-name"></b> <span id="welcome">请点击“重设”开始</span></h6>
-      <button type="button" class="btn btn-warning" id="btn-1" onclick="restart_timer(1)"><span id="item-1-name">班级1</span> 计时</button>
-      <button type="button" class="btn btn-primary" id="btn-2" onclick="restart_timer(2)"><span id="item-2-name">班级2</span> 计时</button>
-      <button type="button" class="btn btn-sm btn-success" id="btn-stop" onclick="stop_cur_timer()">暂停</button>
-	  <button type="button" class="btn btn-sm btn-success" id="btn-start" onclick="start_cur_timer()" style="display: none;">开始</button>
-      <button type="button" class="btn btn-sm btn-danger" id="btn-restart" data-toggle="modal" data-target="#reset">重设</button>
+      <h6 class="text-muted"><b id="cur-name"></b> <span id="welcome">请点击“设置”开始</span></h6>
+      <button type="button" class="btn btn-warning" id="btn-1" onclick="restart_timer(1)" style="display: none;"><span id="item-1-name">班级1</span> 计时</button>
+      <button type="button" class="btn btn-primary" id="btn-2" onclick="restart_timer(2)" style="display: none;"><span id="item-2-name">班级2</span> 计时</button>
+      <button type="button" class="btn btn-sm btn-success" id="btn-stop" onclick="stop_cur_timer()" style="display: none;">暂停</button>
+	  <button type="button" class="btn btn-sm btn-success" id="btn-start" onclick="restart_with_time(5,0);" style="display: none;">开始</button>
+      <button type="button" class="btn btn-sm btn-danger" id="btn-restart" data-toggle="modal" data-target="#reset">设置</button>
     </div>
-		</div>
-		
+	</div>
+	<a class="btn btn-success mt-3 ml-3" href="./timer_common.html" target="_self">普通模式<br><small>返回</small></a>
+	<audio src="./source/ding.wav"  controls="controls" style="display: none;" id="sound">
+		您的浏览器不支持播放声音，请更新您的浏览器
+	</audio>
+	<audio src="./source/ding3.mp3"  controls="controls" style="display: none;" id="sound3">
+	</audio>
     <!-- Modal -->
   <div class="modal fade" id="reset" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -244,7 +288,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="restart()">重设</button>
+          <button type="button" class="btn btn-primary" onclick="restart()">设置</button>
         </div>
       </div>
     </div>
