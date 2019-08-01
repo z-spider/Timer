@@ -2,6 +2,9 @@
 
 ![](https://mrams.gitee.io/img/Project/jx-haitianbei/img.PNG)
 
+
+![](https://mrams.gitee.io/img/Project/jx-haitianbei/img2.PNG)
+
 支持倒计时与**交替计时**功能。当时间剩余30秒或结束时，自动鸣笛示意。
 
 离线版本，下载后直接使用最新版本Chrome或FireFox打开即可，无需联网。
