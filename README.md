@@ -33,4 +33,6 @@ var name_neg = "高2017级1班"
 
 ## 开发
 
+下一步考虑使用`vue.js`重构，~~咕咕~~
+
 使用jQuery + Bootstarp4开发，欢迎交流
