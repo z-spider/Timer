@@ -1,1 +1,0 @@
-﻿var name_topic="辩题"
