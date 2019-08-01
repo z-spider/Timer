@@ -7,11 +7,22 @@
 		<script src="./source/jquery-3.3.1.slim.min.js"></script>
 		<script src="./source/popper.min.js"></script>
 		<script src="./source/bootstrap.min.js"></script>
+		<script src="./config.js"></script>
 		<script type="text/javascript">
 		 var min,sec,timer;
 		 var origin_sec;
+		 function bing(){
+			 var audio = document.getElementById('sound');
+			 audio.play();
+		}
+		function bing3(){
+			var audio = document.getElementById('sound3');
+			audio.play();
+		}
 		function get_text(t)
 		{
+			if(t==0)
+				return "00";
 			res=String(t);
 			if(t<=9)
 				return "0"+res;
@@ -19,7 +30,11 @@
 		}
 		function time_updata(){
 			if(min==0&&sec==0){
+				bing3();
 				return;
+			}
+			if(min==0&&sec==30){
+				bing();
 			}
 			sec-=1;
 			if(sec==-1){
@@ -47,15 +62,56 @@
 			stop_timer();
 			$("#btn-start").hide();
 			$("#btn-stop").show();
-			$("#welcome").hide();
 			min = Number($("#input-min").val());
 			sec = Number($("#input-s").val());
+			$('#min-item-1').text(get_text(min));
+			$('#s-item-1').text(get_text(sec));
 			origin_sec = min*60+sec;
 			$('#reset').modal('hide');
 			$("#btn-2").show();
 			$("#btn-1").show();
 			$("#bar-1").attr('style', "width: 0%");
 			timer = setTimeout("time_updata()", 1000);
+		}
+		function clear_text(){
+			$('#min-item-1').text('00');
+			$('#min-item-2').text('00');
+		}
+		function restart_with_time(m, ss){
+			bing();
+			clear_text();
+			stop_timer();
+			$("#btn-start").hide();
+			$("#btn-stop").show();
+			min = Number(m);
+			sec = Number(ss);
+			$('#min-item-1').text(get_text(min));
+			$('#s-item-1').text(get_text(sec));
+			origin_sec = min*60+sec;
+			$('#reset').modal('hide');
+			$("#btn-2").show();
+			$("#btn-1").show();
+			$("#bar-1").attr('style', "width: 0%");
+			timer = setTimeout("time_updata()", 1000);
+		}
+		function load_name(){
+			$('#topic').val(name_topic);
+			$('#cur-name-aff').text(name_aff);
+			$('#cur-name-neg').text(name_neg);
+		}
+		function load(){
+			load_name();
+			$('#cur-aff').hide();
+			$('#cur-neg').hide();
+		}
+		function change_cur(is_aff){
+			if(is_aff){
+				$('#cur-aff').show();
+				$('#cur-neg').hide();
+			}else{
+				$('#cur-aff').hide();
+				$('#cur-neg').show();
+			}
 		}
 	</script>
 	</head>
@@ -80,7 +136,7 @@
           display: inline-block;
         }
 	</style>
-	<body>
+	<body onload="load()" style="text-align: center">
 
 		<nav class="navbar navbar-dark bg-primary">
 			<span class="navbar-brand">辩论赛计时器 <i>Pro</i></span>
@@ -91,9 +147,25 @@
 					<small class="text-white">By 杨骐嘉 2019</small>
 				</div>
 			</div>
-		  
+			
 		</nav>
 		<div class="container mt-3">
+			<div style="text-align: center;">
+				<img src="./source/JX-logo.png" style="width: 5rem;margin-left: -4em;">
+				<span style="display: inline-block;margin-left: 1rem;vertical-align: middle;">
+						<h5 style="display: block;">成都七中嘉祥外国语学校</h5>
+						<h3 style="font-weight: bold;">第十二届“海天杯”辩论赛 总决赛</h3>
+				</span>
+			    <div>
+					<input id="topic" type="text" name="firstname" value="辩题" style="border: none;color: gray;text-align: center;width: 100%;font-size: 1.5em;">
+				</div>
+				<div class="alert alert-success mt-1" role="alert" id="cur-aff">
+					<b>正方 </b><span id="cur-name-aff"></span>
+				</div>
+				<div class="alert alert-warning mt-1" role="alert" id="cur-neg">
+					<b>反方 </b><span id="cur-name-neg"></span>
+				</div>
+			</div>
 		<div class="m-3">
 			 <div class="timer-block">
 			   <span><span class="badge badge-primary" id="min-item-1">05</span> <small>min</small></span>
@@ -104,13 +176,33 @@
 			 </div>
 		</div>
 		<div class="m-3 mid">
-		  <h6 class="text-muted"><b id="cur-name"></b> <span id="welcome">请点击“重设”开始</span></h6>
 		  <button type="button" class="btn btn-sm btn-success" id="btn-stop" onclick="stop_timer()">暂停</button>
 		  <button type="button" class="btn btn-sm btn-success" id="btn-start" onclick="start_timer()" style="display: none;">开始</button>
-		  <button type="button" class="btn btn-sm btn-danger" id="btn-restart" data-toggle="modal" data-target="#reset">重设</button>
-		</div>
+		  <button type="button" class="btn btn-sm btn-danger" id="btn-restart" data-toggle="modal" data-target="#reset">自定义</button>
 		</div>
 		
+		</div>
+		<div class="btn-group ml-3 mt-3" role="group">
+			<button type="button" class="btn btn-success" onclick="restart_with_time(0,30);change_cur(1);">自我介绍<br><small>正方 30s</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(0,30);change_cur(0);">自我介绍<br><small>反方 30s</small></button>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(3,0);change_cur(1);">开篇立论<br><small>正方 3min</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(3,0);change_cur(0);">开篇立论<br><small>反方 3min</small></button>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(1,30);change_cur(1);">攻辩<br><small>正二 1min 30s</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(1,30);change_cur(0);">攻辩<br><small>反二 1min 30s</small></button>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(1,30);change_cur(1);">攻辩<br><small>正三 1min 30s</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(1,30);change_cur(0);">攻辩<br><small>反三 1min 30s</small></button>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(1,30);change_cur(1);">攻辩小结<br><small>正方 1min 30s</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(1,30);change_cur(0);">攻辩小结<br><small>反方 1min 30s</small></button>
+			<a class="btn btn-primary" href="./timer.html" target="_self">自由辩论<br><small>切换</small></a>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(3,0);change_cur(1);">四辨结辩<br><small>正方 3min</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(3,0);change_cur(0);">四辨结辩<br><small>反方 3min</small></button>
+			
+		</div>
+		<audio src="./source/ding.wav"  controls="controls" style="display: none;" id="sound">
+			您的浏览器不支持播放声音，请更新您的浏览器
+		</audio>
+		<audio src="./source/ding3.mp3"  controls="controls" style="display: none;" id="sound3">
+		</audio>
     <!-- Modal -->
   <div class="modal fade" id="reset" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
