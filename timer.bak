@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="./source/bootstrap.min.css">
+		<script src="./source/jquery-3.3.1.slim.min.js"></script>
+		<script src="./source/popper.min.js"></script>
+		<script src="./source/bootstrap.min.js"></script>
+		<script src="./config.js"></script>
+		<script type="text/javascript">
+		 var cur=-1;
+		 var timers = new Array(4);
+		 var origin_sec = new Array(4);
+		 var audio = document.getElementById('sound');
+		  function bing(){
+		 	 var audio = document.getElementById('sound');
+		 	 audio.play();
+		 }
+		 function bing3(){
+		 	var audio = document.getElementById('sound3');
+		 	audio.play();
+		 }
+		function timer(id, name, min, sec, freq){
+			this.min=Number(min);
+			this.sec=Number(sec);
+			freq=Number(freq);
+			if(freq!=0)
+				this.t=setTimeout("time_updata("+String(id)+")", freq);
+			this.name=name;
+			var cur = $('#item-'+String(id));
+			cur.text(name);
+			cur = $('#item-'+String(id)+"-name");
+			cur.text(name);
+			this.down = function down()
+			{
+				this.sec-=1;
+				if(this.sec==-1){
+				this.min-=1;
+				this.sec=59;
+				}
+			}
+		}
+		function get_text(t)
+		{
+			res=String(t);
+			if(t<=9)
+				return "0"+res;
+			return res;
+		}
+		function time_updata(id){
+			var t=timers[Number(id)];
+			if(t.min==0&&t.sec==0){
+				bing3();
+				return;
+			}
+			if(t.min==0&&t.sec==30){
+				bing();
+			}
+			t.down();
+			var cur = $('#min-item-'+String(id));
+			cur.text(get_text(t.min));
+			cur = $('#s-item-'+String(id));
+			cur.text(get_text(t.sec));
+			t.t=setTimeout("time_updata("+String(id)+")", 1000);
+			$("#bar-"+String(id)).attr('style', "width: "+String((origin_sec[id]-(t.min*60+t.sec))*100/origin_sec[id])+"%");
+		}
+		function stop_timer(id){	
+			if(timers[id]){
+				clearTimeout(timers[id].t);
+			}
+		}
+		function stop_cur_timer(){
+			$("#btn-start").show();
+			$("#btn-stop").hide();
+			if(cur==-1)
+				return
+			stop_timer(cur);
+		}
+		function start_cur_timer(){
+			$("#btn-start").hide();
+			$("#btn-stop").show();
+			if(cur==-1)
+				return
+			restart_timer(cur);
+		}
+		function load_timer(id, name, min, sec){
+			stop_timer(id);
+			timers[id]= new timer(id, name, min, sec, 0);
+			origin_sec[id]=Number(min)*60+Number(sec);
+		}
+		 function start_timer(id, name, min, sec){
+			stop_timer(id);
+			timers[id]= new timer(id, name, min, sec, 1000);
+		 }
+		function restart_timer(id){
+			id=Number(id);
+			cur=id;
+			$("#btn-start").hide();
+			$("#btn-stop").show();
+			if(id==1){
+				stop_timer(2);
+				$("#btn-1").hide();
+				$("#btn-2").show();
+				$("#sta-item-1").show();
+				$("#sta-item-2").hide();
+				var t1=timers[1];
+				$("#cur-name").text(t1.name);
+				$("#welcome").text("正在计时");
+				start_timer(1, t1.name, t1.min, t1.sec, 1000);
+			}else{
+				stop_timer(1);
+				$("#btn-2").hide();
+				$("#btn-1").show();
+				$("#sta-item-2").show();
+				$("#sta-item-1").hide();
+				var t2=timers[2];
+				$("#cur-name").text(t2.name);
+				$("#welcome").text("正在计时");
+				start_timer(2, t2.name, t2.min, t2.sec, 1000);
+			}
+		}
+		function restart(){
+			bing();
+		  name1 = $("#input-name-1").val();
+		  name2 = $("#input-name-2").val();
+		  min = $("#input-min").val();
+		  s = $("#input-s").val();
+			load_timer(1, name1, min, s);
+			load_timer(2, name2, min, s);
+			$('#reset').modal('hide');
+			$("#btn-2").show();
+			$("#btn-1").show();
+			$("#sta-item-2").hide();
+			$("#sta-item-1").hide();
+			$('#min-item-1').text(get_text(min));
+			$('#min-item-2').text(get_text(min));
+			$('#s-item-1').text(get_text(s));
+			$('#s-item-2').text(get_text(s));
+			$("#welcome").text("选择班级开始计时");
+			$("#bar-1").attr('style', "width: 0%");
+			$("#bar-2").attr('style', "width: 0%");
+		}
+		function restart_with_time(min, s){
+			bing();
+		  name1 = $("#input-name-1").val();
+		  name2 = $("#input-name-2").val();
+		  min = Number(min);
+		  s = Number(s);
+			load_timer(1, name1, min, s);
+			load_timer(2, name2, min, s);
+			$('#reset').modal('hide');
+			$("#btn-2").show();
+			$("#btn-1").show();
+			$("#sta-item-2").hide();
+			$("#sta-item-1").hide();
+			$('#min-item-1').text(get_text(min));
+			$('#min-item-2').text(get_text(min));
+			$('#s-item-1').text(get_text(s));
+			$('#s-item-2').text(get_text(s));
+			$("#welcome").text("选择班级开始计时");
+			$("#bar-1").attr('style', "width: 0%");
+			$("#bar-2").attr('style', "width: 0%");
+		}
+		function load_name(){
+			$('#topic').val(name_topic);
+			$('#input-name-1').val(name_aff);
+			$('#input-name-2').val(name_neg);
+		}
+	</script>
+	</head>
+	<style>
+		.pull-right{
+			float: right;
+		}
+		.my-middle{
+			vertical-align: middle;
+		}
+		.timer-block{
+			font-size: 4rem;
+    text-align:center;
+		}
+   .mid{
+     text-align:center;
+    }
+    .hid{
+      display: none;
+    }
+    .in-line{
+      display: inline-block;
+    }
+	</style>
+	<body onload="load_name()" style="text-align: center">
+
+		<nav class="navbar navbar-dark bg-primary">
+			<span class="navbar-brand"><i></i></span>
+			<a class="nav-item nav-link text-white" href="./timer_common.html" target="_self">自由模式[切换]</a>
+			<div class="navbar-nav">
+			</div>
+		  
+		</nav>
+		<div class="container mt-3">
+			<div style="text-align: center;margin-bottom: 2rem;">
+				<span style="display: inline-block;margin-left: 0rem;vertical-align: middle;">
+						<h3 style="font-weight: bold;">动物科学学院队内赛</h3>
+				</span>
+			    <div>
+					<input id="topic" type="text" name="firstname" value="辩题" style="border: none;color: gray;text-align: center;width: 100%;font-size: 1.5em;">
+				</div>
+			</div>
+			<div class="m-3">
+     <div class="row align-items-center">
+       <div class="col">
+         <div class="timer-block">
+           <h4 class="text-muted"><span id="item-1">班级1</span><span class="badge badge-info ml-3" id="sta-item-1">正在计时</span></h4>
+           <span><span class="badge badge-primary" id="min-item-1">00</span> <small>min</small></span>
+           <span><span class="badge badge-primary" id="s-item-1">00</span> <small>s</small></span>
+		   <div class="progress">
+				<div id="bar-1" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+			</div>
+         </div>
+       </div>
+       <div class="col">
+         <div class="timer-block">
+           <h4 class="text-muted"><span id="item-2">班级2</span><span class="badge badge-info ml-3" id="sta-item-2">正在计时</span></h4>
+           <span><span class="badge badge-warning" id="min-item-2">00</span> <small>min</small></span>
+           <span><span class="badge badge-warning" id="s-item-2">00</span> <small>s</small></span>
+			<div class="progress">
+				<div id="bar-2" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+			</div>
+         </div>
+       </div>
+       </div>
+    </div>
+    <div class="m-3 mid">
+      <h6 class="text-muted"><b id="cur-name"></b> <span id="welcome">请点击“设置”开始</span></h6>
+      <button type="button" class="btn btn-warning" id="btn-1" onclick="restart_timer(1)" style="display: none;"><span id="item-1-name">正方剩余</span> 计时</button>
+      <button type="button" class="btn btn-primary" id="btn-2" onclick="restart_timer(2)" style="display: none;"><span id="item-2-name">反方剩余</span> 计时</button>
+      <button type="button" class="btn btn-sm btn-success" id="btn-stop" onclick="stop_cur_timer()" style="display: none;">暂停</button>
+	  <button type="button" class="btn btn-sm btn-success" id="btn-start" onclick="start_cur_timer(0,0);" style="display: none;">开始</button>
+      <button type="button" class="btn btn-sm btn-danger" id="btn-restart" data-toggle="modal" data-target="#reset">设置</button>
+    </div>
+	</div>
+	<a class="btn btn-success mt-3 ml-3" href="./timer_common.html" target="_self" style="float: left;">普通模式<br><small>返回</small></a>
+	<audio src="./source/ding.wav"  controls="controls" style="display: none;" id="sound">
+		您的浏览器不支持播放声音，请更新您的浏览器
+	</audio>
+	<audio src="./source/ding3.mp3"  controls="controls" style="display: none;" id="sound3">
+	</audio>
+    <!-- Modal -->
+  <div class="modal fade" id="reset" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">重设Timer</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="text-align: left;">
+          <div>
+            <div class="input-group mb-3">
+            <input type="text" class="form-control" id="input-name-1" placeholder="班级1名称" value="班级1">
+          </div>
+            <div class="input-group mb-3">
+            <input type="text" class="form-control" id="input-name-2" placeholder="班级2名称" value="班级2">
+          </div>
+          <div class="in-line">
+            <div class="input-group mb-3">
+            <input type="number" class="form-control" id="input-min" placeholder="分钟" value="1">
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">min</span>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="number" class="form-control" id="input-s" placeholder="秒" value="30">
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon3">s</span>
+            </div>
+          </div>
+          </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="restart()">设置</button>
+        </div>
+      </div>
+    </div>
+  </div>
+		
+	</body>
+</html>

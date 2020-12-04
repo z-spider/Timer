@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="./source/bootstrap.min.css">
+		<script src="./source/jquery-3.3.1.slim.min.js"></script>
+		<script src="./source/popper.min.js"></script>
+		<script src="./source/bootstrap.min.js"></script>
+		<script src="./config.js"></script>
+		<script type="text/javascript">
+		 var min,sec,timer;
+		 var origin_sec;
+		 function bing(){
+			 var audio = document.getElementById('sound');
+			 audio.play();
+		}
+		function bing3(){
+			var audio = document.getElementById('sound3');
+			audio.play();
+		}
+		function get_text(t)
+		{
+			if(t==0)
+				return "00";
+			res=String(t);
+			if(t<=9)
+				return "0"+res;
+			return res;
+		}
+		function time_updata(){
+			if(min==0&&sec==0){
+				bing3();
+				return;
+			}
+			if(min==0&&sec==30){
+				bing();
+			}
+			sec-=1;
+			if(sec==-1){
+				min-=1;
+				sec=59;
+			}
+			var cur = $('#min-item-1');
+			cur.text(get_text(min));
+			cur = $('#s-item-1');
+			cur.text(get_text(sec));
+			timer=setTimeout("time_updata()", 1000);
+			$("#bar-1").attr('style', "width: "+String((origin_sec-(min*60+sec))*100/origin_sec)+"%");
+		}
+		function stop_timer(){
+			$("#btn-start").show();
+			$("#btn-stop").hide();
+			clearTimeout(timer);
+		}
+		function start_timer(){
+			$("#btn-start").hide();
+			$("#btn-stop").show();
+			timer = setTimeout("time_updata()", 1000);
+		}
+		function restart(){
+			stop_timer();
+			$("#btn-start").hide();
+			$("#btn-stop").show();
+			min = Number($("#input-min").val());
+			sec = Number($("#input-s").val());
+			$('#min-item-1').text(get_text(min));
+			$('#s-item-1').text(get_text(sec));
+			origin_sec = min*60+sec;
+			$('#reset').modal('hide');
+			$("#btn-2").show();
+			$("#btn-1").show();
+			$("#bar-1").attr('style', "width: 0%");
+			timer = setTimeout("time_updata()", 1000);
+		}
+		function clear_text(){
+			$('#min-item-1').text('00');
+			$('#min-item-2').text('00');
+		}
+		function restart_with_time(m, ss){
+			bing();
+			clear_text();
+			stop_timer();
+			$("#btn-start").hide();
+			$("#btn-stop").show();
+			min = Number(m);
+			sec = Number(ss);
+			$('#min-item-1').text(get_text(min));
+			$('#s-item-1').text(get_text(sec));
+			origin_sec = min*60+sec;
+			$('#reset').modal('hide');
+			$("#btn-2").show();
+			$("#btn-1").show();
+			$("#bar-1").attr('style', "width: 0%");
+			timer = setTimeout("time_updata()", 1000);
+		}
+		function load_name(){
+			$('#topic').val(name_topic);
+			$('#cur-name-aff').text(name_aff);
+			$('#cur-name-neg').text(name_neg);
+		}
+		function load(){
+			load_name();
+			$('#cur-aff').hide();
+			$('#cur-neg').hide();
+		}
+		function change_cur(is_aff){
+			if(is_aff){
+				$('#cur-aff').show();
+				$('#cur-neg').hide();
+			}else{
+				$('#cur-aff').hide();
+				$('#cur-neg').show();
+			}
+		}
+	</script>
+	</head>
+	<style>
+		.pull-right{
+			float: right;
+		}
+		.my-middle{
+			vertical-align: middle;
+		}
+		.timer-block{
+			font-size: 4rem;
+            text-align:center;
+		}
+       .mid{
+         text-align:center;
+        }
+        .hid{
+          display: none;
+        }
+        .in-line{
+          display: inline-block;
+        }
+
+	</style>
+	<body onload="load()" style="text-align: center">
+
+		<nav class="navbar navbar-dark bg-primary">
+			<span class="navbar-brand">计时器<i></i></span>
+			<a class="nav-item nav-link text-white" href="./timer.html" target="_self">普通模式[切换]</a>
+			<div class="navbar-nav">
+			</div>
+			
+		</nav>
+		<div class="container mt-3">
+			<div style="text-align: center;">
+				<span style="display: inline-block;margin-left: 0rem;vertical-align: middle;">
+						<h5 style="display: block;"></h5>
+						<h3 style="font-weight: bold;">动物科学学院队内赛</h3>
+				</span>
+			    <div>
+					<input id="topic" type="text" name="firstname" value="辩题" style="border: none;color: gray;text-align: center;width: 100%;font-size: 1.5em;">
+				</div>
+				<div class="alert alert-success mt-1" role="alert" id="cur-aff">
+					<b>正方 </b><span id="cur-name-aff"></span>
+				</div>
+				<div class="alert alert-warning mt-1" role="alert" id="cur-neg">
+					<b>反方 </b><span id="cur-name-neg"></span>
+				</div>
+			</div>
+		<div class="m-3">
+			 <div class="timer-block">
+			   <span><span class="badge badge-primary" id="min-item-1">00</span> <small>min</small></span>
+			   <span><span class="badge badge-primary" id="s-item-1">00</span> <small>s</small></span>
+			   <div class="progress">
+					<div id="bar-1" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+				</div>
+			 </div>
+		</div>
+		<div class="m-3 mid">
+		  <button type="button" class="btn btn-sm btn-success" id="btn-stop" onclick="stop_timer()">暂停</button>
+		  <button type="button" class="btn btn-sm btn-success" id="btn-start" onclick="start_timer()" style="display: none;">开始</button>
+		  <button type="button" class="btn btn-sm btn-danger" id="btn-restart" data-toggle="modal" data-target="#reset">自定义</button>
+		</div>
+		
+		</div>
+		<!--赛制-->
+		<div class="btn-group1 ml-3 mt-3" role="group">
+			<button type="button" class="btn btn-success" onclick="restart_with_time(5,0);change_cur(1);">自我介绍<br><small>正方</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(5,0);change_cur(0);">自我介绍<br><small>反方</small></button>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(3,30);change_cur(1);">正方立论<br><small>正一 3min 30s</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(2,0);change_cur(0);">反方质询<br><small>反二 2min</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(3,30);change_cur(0);">反方立论<br><small>反一 3min 30s</small></button>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(2,00);change_cur(1);">正方质询<br><small>正二 2min</small></button>
+			
+		</div><!--结尾-->
+		<div class="btn-group1 ml-3 mt-3" role="group">
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(1,30);change_cur(0);">反方小节<br><small>反二 1min 30s</small></button>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(1,30);change_cur(1);">正方小节<br><small>正二 1min 30s</small></button>
+			<a class="btn btn-primary" href="./timer.html" target="_self">双方对辩<br><small>四辩</small></a>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(1,30);change_cur(1);">正方盘问<br><small>正三 1min 30s</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(1,30);change_cur(0);">反方盘问<br><small>反三 1min 30s</small></button>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(1,30);change_cur(1);">正方小节<br><small>正三 1min 30s</small></button>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(1,30);change_cur(0);">反方小节<br><small>反三 1min 30s</small></button>
+			<a class="btn btn-primary" href="./timer.html" target="_self">自由辩论<br><small>切换</small></a>
+			<button type="button" class="btn btn-warning" onclick="restart_with_time(3,30);change_cur(0);">反方结辩<br><small>反四 3min</small></button>
+			<button type="button" class="btn btn-success" onclick="restart_with_time(3,30);change_cur(1);">正方结辩<br><small>正四 3min</small></button>
+			
+		</div><!--结尾-->
+		<audio src="./source/ding.wav"  controls="controls" style="display: none;" id="sound">
+			您的浏览器不支持播放声音，请更新您的浏览器
+		</audio>
+		<audio src="./source/ding3.mp3"  controls="controls" style="display: none;" id="sound3">
+		</audio>
+    <!-- Modal -->
+  <div class="modal fade" id="reset" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">重设Timer</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="in-line">
+            <div class="input-group mb-3">
+            <input type="number" class="form-control" id="input-min" placeholder="分钟" aria-label="Recipient's username" aria-describedby="basic-addon2" value="5">
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">min</span>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <input type="number" class="form-control" id="input-s" placeholder="秒" aria-label="Recipient's username" aria-describedby="basic-addon2" value="0">
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">s</span>
+            </div>
+          </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="restart()">重设</button>
+        </div>
+      </div>
+    </div>
+  </div>
+		
+	</body>
+</html>
