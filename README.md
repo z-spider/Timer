@@ -1,3 +1,15 @@
+# 更新说明
+
+添加了一个config.exe用于更新赛制及排版。
+
+使用方法：在config.js中编辑赛制后，双击config.exe。
+
+ps：填写赛制请注意格式。
+
+原作者MrAMS，详见https://github.com/MrAMS/Timer
+
+# 原始文档
+
 成都七中嘉祥外国语学校 2019年第十二届 “海天杯”辩论赛 **倒计时器**
 
 ![](https://mrams.gitee.io/img/Project/jx-haitianbei/img.PNG)
